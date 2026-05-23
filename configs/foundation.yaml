@@ -1,0 +1,27 @@
+# Glora Step 3 default config.
+# Pool covers CNN / recommendation / Transformer.
+
+pool: "googlenet:1;inception_v3:1;resnet50:1;deepfm:1;bert_base:1"
+episodes: 2000
+batch_episodes: 16
+mini_batch_size: 512
+ppo_epochs: 4
+lr: 3.0e-4
+clip_eps: 0.2
+gae_lambda: 1.0
+entropy_coef: 0.02
+entropy_coef_end: 0.0
+
+pe_dim: 16
+hidden: 192
+emb: 192
+heads: 4
+layers: 4
+dropout: 0.1
+
+streams: 8
+iters: 15
+warmups: 5
+dense_coef: 0.05
+potential_coef: 0.5
+seed: 42
