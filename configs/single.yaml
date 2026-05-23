@@ -1,0 +1,28 @@
+# Glora Step 2 default config.
+# Use with:  python scripts/step2_train_single.py --model googlenet ...
+
+model: googlenet
+batch_size: 1
+episodes: 500
+batch_episodes: 8
+mini_batch_size: 256
+ppo_epochs: 4
+lr: 3.0e-4
+clip_eps: 0.2
+gae_lambda: 1.0
+entropy_coef: 0.02
+entropy_coef_end: 0.005
+
+pe_dim: 16
+hidden: 128
+emb: 128
+heads: 4
+layers: 3
+dropout: 0.1
+
+streams: 8
+iters: 20
+warmups: 5
+dense_coef: 0.05
+potential_coef: 0.5
+seed: 0
