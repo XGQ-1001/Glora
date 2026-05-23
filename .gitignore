@@ -1,0 +1,9 @@
+artifacts/
+__pycache__/
+*.pyc
+*.pt
+*.tmp
+.idea/
+.vscode/
+*.egg-info/
+.ipynb_checkpoints/
