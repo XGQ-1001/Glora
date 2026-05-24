@@ -46,7 +46,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--clip-eps", type=float, default=0.2)
     p.add_argument("--gae-lambda", type=float, default=1.0)
     p.add_argument("--entropy-coef", type=float, default=0.02)
-    p.add_argument("--entropy-coef-end", type=float, default=None)
+    p.add_argument("--entropy-coef-end", type=float, default=0.0)
     p.add_argument("--pe-dim", type=int, default=16)
     p.add_argument("--hidden", type=int, default=128)
     p.add_argument("--emb", type=int, default=128)
@@ -58,7 +58,8 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--warmups", type=int, default=5)
     p.add_argument("--dense-coef", type=float, default=0.05)
     p.add_argument("--potential-coef", type=float, default=0.5)
-    p.add_argument("--no-shaping", action="store_true", help="disable dense + potential shaping")
+    p.add_argument("--use-shaping", action="store_true", help="enable dense + potential shaping")
+    p.add_argument("--no-shaping", action="store_true", help="kept for compatibility; terminal-only is now the default")
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--save", type=str, default=None, help="checkpoint path; auto-generated if omitted")
     return p
@@ -92,11 +93,13 @@ def main() -> int:
         dropout=args.dropout,
     ).to(device)
 
+    use_shaping = args.use_shaping and not args.no_shaping
     reward_cfg = RewardConfig(
-        dense_coef=0.0 if args.no_shaping else args.dense_coef,
-        potential_coef=0.0 if args.no_shaping else args.potential_coef,
-        use_dense=not args.no_shaping,
-        use_potential=not args.no_shaping,
+        dense_coef=args.dense_coef if use_shaping else 0.0,
+        potential_coef=args.potential_coef if use_shaping else 0.0,
+        use_dense=use_shaping,
+        use_potential=use_shaping,
+        multi_baseline=False,
     )
 
     cfg = GloraTrainConfig(

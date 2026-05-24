@@ -11,7 +11,7 @@ Supports two execution modes:
 
 The trainer always uses:
 - masked action sampling (invalid actions get probability 0)
-- per-step dense reward + potential shaping + multi-baseline terminal reward
+- terminal real-latency reward, with optional dense / potential shaping
 - vectorised mini-batch PPO updates
 - cosine LR decay
 - best (latency, schedule order) tracking for reproducibility
@@ -89,7 +89,8 @@ class GloraTrainConfig:
 
 @dataclass
 class Transition:
-    h_static: torch.Tensor
+    x: torch.Tensor
+    lap_pe: torch.Tensor
     dyn_node: torch.Tensor
     glob: torch.Tensor
     ready_mask: torch.Tensor
@@ -180,7 +181,8 @@ def rollout_episode(
         )
 
         transitions.append(Transition(
-            h_static=h_static.detach(),
+            x=x.detach(),
+            lap_pe=lap_pe.detach(),
             dyn_node=dyn.detach(),
             glob=glob.detach(),
             ready_mask=mask.detach(),
@@ -241,7 +243,8 @@ def _ppo_update(
     old_lp = torch.tensor([tr.log_prob for tr in transitions], dtype=torch.float32, device=device)
     actions = torch.tensor([tr.action for tr in transitions], dtype=torch.long, device=device)
 
-    h_all = torch.stack([tr.h_static for tr in transitions])
+    x_all = torch.stack([tr.x for tr in transitions])
+    pe_all = torch.stack([tr.lap_pe for tr in transitions])
     dyn_all = torch.stack([tr.dyn_node for tr in transitions])
     glob_all = torch.stack([tr.glob for tr in transitions])
     mask_all = torch.stack([tr.ready_mask for tr in transitions])
@@ -258,8 +261,9 @@ def _ppo_update(
         for start in range(0, T, mbs):
             idx = torch.tensor(perm[start:start + mbs], dtype=torch.long, device=device)
 
+            h_static = policy.encode_static(x_all[idx], pe_all[idx])
             lp, val, ent = policy.batch_evaluate_actions(
-                h_all[idx], dyn_all[idx], glob_all[idx], mask_all[idx],
+                h_static, dyn_all[idx], glob_all[idx], mask_all[idx],
                 actions[idx],
             )
             ratio = torch.exp(lp - old_lp[idx])
@@ -354,6 +358,9 @@ def train(
     if not trainable_params:
         raise ValueError("No trainable parameters found")
 
+    # PPO compares old and new log-probs; deterministic forwards keep dropout
+    # noise out of that ratio while still allowing gradients to flow.
+    policy.eval()
     optimizer = torch.optim.Adam(trainable_params, lr=cfg.lr)
 
     # cosine LR over PPO update count = ceil(episodes / batch_episodes)

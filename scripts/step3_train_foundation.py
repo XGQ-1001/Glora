@@ -69,6 +69,7 @@ def build_argparser() -> argparse.ArgumentParser:
     p.add_argument("--warmups", type=int, default=5)
     p.add_argument("--dense-coef", type=float, default=0.05)
     p.add_argument("--potential-coef", type=float, default=0.5)
+    p.add_argument("--use-shaping", action="store_true", help="enable dense + potential shaping")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--save", type=str, default=None)
     p.add_argument("--warmup-pool", action="store_true",
@@ -117,6 +118,9 @@ def main() -> int:
     reward_cfg = RewardConfig(
         dense_coef=args.dense_coef,
         potential_coef=args.potential_coef,
+        use_dense=args.use_shaping,
+        use_potential=args.use_shaping,
+        multi_baseline=False,
     )
 
     cfg = GloraTrainConfig(

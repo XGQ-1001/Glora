@@ -94,23 +94,27 @@ class GraphTransformerEncoder(nn.Module):
     ) -> torch.Tensor:
         """Encode static node features.
 
-        ``x`` is ``[N, in_dim]`` and ``lap_pe`` is ``[N, pe_dim]``. The
-        encoder treats the graph as a single sequence (no padding) so the
-        unbatched call always runs on shape ``[1, N, hidden]``.
+        ``x`` may be ``[N, in_dim]`` for one graph or ``[B, N, in_dim]`` for a
+        PPO mini-batch of repeated same-graph states.
         """
-        if x.dim() != 2:
-            raise ValueError(f"x must be [N, in_dim], got shape {tuple(x.shape)}")
-        if lap_pe.dim() != 2:
-            raise ValueError(f"lap_pe must be [N, pe_dim], got shape {tuple(lap_pe.shape)}")
-        if lap_pe.shape[0] != x.shape[0]:
+        if x.dim() not in (2, 3):
+            raise ValueError(f"x must be [N, in_dim] or [B, N, in_dim], got shape {tuple(x.shape)}")
+        if lap_pe.dim() != x.dim():
             raise ValueError(
-                f"lap_pe / x node count mismatch: {lap_pe.shape[0]} vs {x.shape[0]}"
+                f"lap_pe must have the same rank as x, got {tuple(lap_pe.shape)} vs {tuple(x.shape)}"
+            )
+        if lap_pe.shape[:-1] != x.shape[:-1]:
+            raise ValueError(
+                f"lap_pe / x node shape mismatch: {tuple(lap_pe.shape)} vs {tuple(x.shape)}"
             )
 
+        unbatched = x.dim() == 2
         h = self.input_proj(torch.cat([x, lap_pe.to(x.dtype)], dim=-1))
-        h = h.unsqueeze(0)  # [1, N, hidden]
+        if unbatched:
+            h = h.unsqueeze(0)  # [1, N, hidden]
         h = self.encoder(h, mask=attn_mask, src_key_padding_mask=key_padding_mask)
-        h = h.squeeze(0)
+        if unbatched:
+            h = h.squeeze(0)
         return self.out_proj(h)
 
     # ------------------------------------------------------------------

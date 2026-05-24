@@ -35,13 +35,13 @@ import math
 class RewardConfig:
     """Shaping hyper-parameters."""
 
-    dense_coef: float = 0.05          # weight of the simulator makespan delta
-    potential_coef: float = 0.5       # weight of γΦ(s')-Φ(s)
+    dense_coef: float = 0.0           # optional simulator makespan shaping
+    potential_coef: float = 0.0       # optional γΦ(s')-Φ(s) shaping
     terminal_scale: float = 1.0       # rescale of the terminal real-latency term
     gamma: float = 1.0                # discount used inside Φ shaping
-    use_dense: bool = True
-    use_potential: bool = True
-    multi_baseline: bool = True       # use min(L_opara, L_best_history)
+    use_dense: bool = False
+    use_potential: bool = False
+    multi_baseline: bool = False      # use min(L_opara, L_best_history)
 
     # Running tracker of the best historical GNN latency seen so far.
     best_gnn_ms: float = field(default_factory=lambda: math.inf)
