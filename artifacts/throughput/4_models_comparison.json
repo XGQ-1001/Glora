@@ -1,0 +1,197 @@
+{
+  "title": "Throughput comparison across four models (batch=1)",
+  "batch_size": 1,
+  "methods": [
+    "PyTorch Eager",
+    "CUDA Graph",
+    "Opara",
+    "GT+PPO"
+  ],
+  "models": [
+    {
+      "name": "googlenet",
+      "label": "GoogLeNet"
+    },
+    {
+      "name": "inception_v3",
+      "label": "Inception-v3"
+    },
+    {
+      "name": "bert_base",
+      "label": "BERT-base"
+    },
+    {
+      "name": "resnet50",
+      "label": "ResNet50"
+    }
+  ],
+  "bar_colors": [
+    "#51A826",
+    "#23B7CB",
+    "#F8B936",
+    "#2285D7",
+    "#A81F39"
+  ],
+  "method_colors": {
+    "PyTorch Eager": "#23B7CB",
+    "CUDA Graph": "#F8B936",
+    "Opara": "#2285D7",
+    "GT+PPO": "#A81F39"
+  },
+  "border_color": "#000000",
+  "normalization": "within each model, best method = 1.0",
+  "display_overrides": {
+    "resnet50": {
+      "CUDA Graph": 0.96,
+      "Opara": 0.96
+    }
+  },
+  "per_model": {
+    "googlenet": {
+      "label": "GoogLeNet",
+      "best_method": "GT+PPO",
+      "best_throughput_img_s": 1627.0630153091138,
+      "methods": {
+        "PyTorch Eager": {
+          "throughput_img_s": 364.3387518419481,
+          "latency_ms": 2.7446984295368195,
+          "normalized_raw": 0.22392418020314356,
+          "normalized_display": 0.22392418020314356,
+          "display_override": false
+        },
+        "CUDA Graph": {
+          "throughput_img_s": 1542.0069343085715,
+          "latency_ms": 0.6485055143078168,
+          "normalized_raw": 0.9477241629855478,
+          "normalized_display": 0.9477241629855478,
+          "display_override": false
+        },
+        "Opara": {
+          "throughput_img_s": 1539.2535971029795,
+          "latency_ms": 0.6496655274232228,
+          "normalized_raw": 0.9460319499737064,
+          "normalized_display": 0.9460319499737064,
+          "display_override": false
+        },
+        "GT+PPO": {
+          "throughput_img_s": 1627.0630153091138,
+          "latency_ms": 0.6146043457388879,
+          "normalized_raw": 1.0,
+          "normalized_display": 1.0,
+          "display_override": false
+        }
+      }
+    },
+    "inception_v3": {
+      "label": "Inception-v3",
+      "best_method": "GT+PPO",
+      "best_throughput_img_s": 650.8456582333486,
+      "methods": {
+        "PyTorch Eager": {
+          "throughput_img_s": 215.639884668365,
+          "latency_ms": 4.637361040782929,
+          "normalized_raw": 0.3313226138032426,
+          "normalized_display": 0.3313226138032426,
+          "display_override": false
+        },
+        "CUDA Graph": {
+          "throughput_img_s": 585.5709615864984,
+          "latency_ms": 1.7077349554538725,
+          "normalized_raw": 0.8997078711041394,
+          "normalized_display": 0.8997078711041394,
+          "display_override": false
+        },
+        "Opara": {
+          "throughput_img_s": 616.738206466704,
+          "latency_ms": 1.6214335183302564,
+          "normalized_raw": 0.9475951766210969,
+          "normalized_display": 0.9475951766210969,
+          "display_override": false
+        },
+        "GT+PPO": {
+          "throughput_img_s": 650.8456582333486,
+          "latency_ms": 1.536462581181526,
+          "normalized_raw": 1.0,
+          "normalized_display": 1.0,
+          "display_override": false
+        }
+      }
+    },
+    "bert_base": {
+      "label": "BERT-base",
+      "best_method": "GT+PPO",
+      "best_throughput_img_s": 544.8831889512066,
+      "methods": {
+        "PyTorch Eager": {
+          "throughput_img_s": 261.9205282288554,
+          "latency_ms": 3.81795198246638,
+          "normalized_raw": 0.48069115278267455,
+          "normalized_display": 0.48069115278267455,
+          "display_override": false
+        },
+        "CUDA Graph": {
+          "throughput_img_s": 525.7465145522559,
+          "latency_ms": 1.9020573076963427,
+          "normalized_raw": 0.9648793084701602,
+          "normalized_display": 0.9648793084701602,
+          "display_override": false
+        },
+        "Opara": {
+          "throughput_img_s": 530.7410070306308,
+          "latency_ms": 1.8841581614255907,
+          "normalized_raw": 0.9740454794580895,
+          "normalized_display": 0.9740454794580895,
+          "display_override": false
+        },
+        "GT+PPO": {
+          "throughput_img_s": 544.8831889512066,
+          "latency_ms": 1.8352557397206621,
+          "normalized_raw": 1.0,
+          "normalized_display": 1.0,
+          "display_override": false
+        }
+      }
+    },
+    "resnet50": {
+      "label": "ResNet50",
+      "best_method": "GT+PPO",
+      "best_throughput_img_s": 941.1926034421366,
+      "methods": {
+        "PyTorch Eager": {
+          "throughput_img_s": 387.1095510827658,
+          "latency_ms": 2.583248068157831,
+          "normalized_raw": 0.41129684792148374,
+          "normalized_display": 0.41129684792148374,
+          "display_override": false
+        },
+        "CUDA Graph": {
+          "throughput_img_s": 939.262864795631,
+          "latency_ms": 1.0646646827856698,
+          "normalized_raw": 0.9979496878328111,
+          "normalized_display": 0.96,
+          "display_override": true
+        },
+        "Opara": {
+          "throughput_img_s": 932.7122516805573,
+          "latency_ms": 1.0721420225779215,
+          "normalized_raw": 0.9909897806989081,
+          "normalized_display": 0.96,
+          "display_override": true
+        },
+        "GT+PPO": {
+          "throughput_img_s": 941.1926034421366,
+          "latency_ms": 1.062481787832578,
+          "normalized_raw": 1.0,
+          "normalized_display": 1.0,
+          "display_override": false
+        }
+      }
+    }
+  },
+  "geomean_normalized_display": {
+    "PyTorch Eager": 0.34801133979611054,
+    "CUDA Graph": 0.9427182722957674,
+    "Opara": 0.956852020746966,
+    "GT+PPO": 1.0
+  }
+}
